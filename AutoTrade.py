@@ -2,15 +2,21 @@ import os, sys, ctypes
 import win32com.client
 import pandas as pd
 from datetime import datetime
-from slacker import Slacker
+import requests
 import time, calendar
 
-slack = Slacker('')
+def post_message(token, channel, text):
+    response = requests.post("https://slack.com/api/chat.postMessage",
+        headers={"Authorization": "Bearer "+token},
+        data={"channel": channel,"text": text}
+    )
+
+myToken = ""
 def dbgout(message):
     """인자로 받은 문자열을 파이썬 셸과 슬랙으로 동시에 출력한다."""
     print(datetime.now().strftime('[%m/%d %H:%M:%S]'), message)
     strbuf = datetime.now().strftime('[%m/%d %H:%M:%S] ') + message
-    slack.chat.post_message('', strbuf)
+    post_message(myToken,"#stock", strbuf)
 
 def printlog(message, *args):
     """인자로 받은 문자열을 파이썬 셸에 출력한다."""

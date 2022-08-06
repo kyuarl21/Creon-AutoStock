@@ -1,5 +1,5 @@
 import win32com.client
-from slacker import Slacker
+import requests
  
 # 연결 여부 체크
 objCpCybos = win32com.client.Dispatch("CpUtil.CpCybos")
@@ -65,8 +65,14 @@ print("예상체결가", exPrice)
 print("예상체결가 대비", exDiff)
 print("예상체결수량", exVol)
 
-# Slacker
-slack = Slacker('')
 
-# Send a message to #general channel
-slack.chat.post_message('#stock', '삼성전자 현재가: ' + str(offer))
+def post_message(token, channel, text):
+    response = requests.post("https://slack.com/api/chat.postMessage",
+        headers={"Authorization": "Bearer "+token},
+        data={"channel": channel,"text": text}
+    )
+    print(response)
+ 
+myToken = ""
+ 
+post_message(myToken, "#stock", "삼성전자 현재가: " + str(offer))
